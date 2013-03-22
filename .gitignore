@@ -1,0 +1,5 @@
+*.elc
+drupal-spell-*.tar
+drupal-spell-pkg.el
+dict/drupal.aspell
+README
