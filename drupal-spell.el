@@ -29,12 +29,6 @@
 
 (require 'ispell)
 
-(defcustom drupal-spell-extra-dict (drupal-spell-find-dictionary)
-  "Location of the Drupal aspell dictionary."
-  :type '(file :must-match t)
-  :safe t
-  :group 'ispell)
-
 (defun drupal-spell-find-dictionary nil
   "Find the `drupal-spell' dictionary. Generate it if necessary."
   ;; Let's set up some temporary variables.
@@ -61,6 +55,12 @@
                 dict
               ""))
             ""))))
+
+(defcustom drupal-spell-extra-dict (drupal-spell-find-dictionary)
+  "Location of the Drupal aspell dictionary."
+  :type '(file :must-match t)
+  :safe t
+  :group 'ispell)
 
 ;;;###autoload
 (defun drupal-spell-enable nil
