@@ -9,7 +9,8 @@ The command will be enabled automatically when activating
 ## Installation
 
 The easiest way to install Drupal spell is probably to install it via
-the ELPA archive at [Marmalade](http://marmalade-repo.org/packages/drupal-spell).
+the ELPA packages at [Marmalade](http://marmalade-repo.org/packages/drupal-spell)
+or [MELPA](http://melpa.milkbox.net/).
 
 ELPA (package.el) is part of Emacs 24. For Emacs 23 see
 [Marmalade](http://marmalade-repo.org) for installation instructions.
