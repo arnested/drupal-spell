@@ -29,17 +29,38 @@
 
 (require 'ispell)
 
-;;;###autoload
-(defcustom drupal-spell-extra-dict (let ((dict (concat (file-name-directory
-                                                        (or load-file-name buffer-file-name))
-                                                       "dict/drupal.aspell")))
-                                     (if (file-readable-p dict)
-                                       dict
-                                       ""))
+(defcustom drupal-spell-extra-dict (drupal-spell-find-dictionary)
   "Location of the Drupal aspell dictionary."
   :type '(file :must-match t)
   :safe t
   :group 'ispell)
+
+(defun drupal-spell-find-dictionary nil
+  "Find the `drupal-spell' dictionary. Generate it if necessary."
+  ;; Let's set up some temporary variables.
+  (let ((dict (concat (file-name-directory
+                       (or load-file-name buffer-file-name))
+                      "dict/drupal.aspell"))
+        (wordlist (concat (file-name-directory
+                           (or load-file-name buffer-file-name))
+                          "dict/drupal.txt")))
+    ;; If dictionary exists and is readable return it otherwise return the empty string.
+    (if (file-readable-p dict)
+        dict
+      ;; If the dictionary doesn't exists, but we can read the word
+      ;; list and we can find the aspell executable try to generate
+      ;; the dictionary.
+      (if (and (not (file-exists-p dict))
+               (file-exists-p wordlist)
+               (executable-find "aspell"))
+          (progn
+            ;; Generate the dictionary from the word list.
+            (call-process (executable-find "aspell") wordlist nil nil "--lang" "en" "create" "master" dict)
+            ;; If the dictionary exists and is readable now return it otherwise return the empty string.
+            (if (file-readable-p dict)
+                dict
+              ""))
+            ""))))
 
 ;;;###autoload
 (defun drupal-spell-enable nil
