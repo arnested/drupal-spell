@@ -29,12 +29,16 @@
 
 (require 'ispell)
 
-(defun drupal-spell-find-dictionary nil
+(defun drupal-spell-find-dictionary (&optional language)
   "Find the `drupal-spell' dictionary. Generate it if necessary."
+  (when (null language)
+    (setq language "en"))
   ;; Let's set up some temporary variables.
   (let ((dict (concat (file-name-directory
                        (or load-file-name buffer-file-name))
-                      "dict/drupal.aspell"))
+                      "dict/drupal."
+                      language
+                      ".aspell"))
         (wordlist (concat (file-name-directory
                            (or load-file-name buffer-file-name))
                           "dict/drupal.txt")))
@@ -49,7 +53,7 @@
                (executable-find "aspell"))
           (progn
             ;; Generate the dictionary from the word list.
-            (call-process (executable-find "aspell") wordlist nil nil "--lang" "en" "create" "master" dict)
+            (call-process (executable-find "aspell") wordlist nil nil "--lang" language "create" "master" dict)
             ;; If the dictionary exists and is readable now return it otherwise return the empty string.
             (if (file-readable-p dict)
                 dict
