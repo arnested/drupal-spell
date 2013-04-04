@@ -22,19 +22,20 @@
 
 ARCHIVE_NAME:=drupal-spell
 VERSION:=$(shell carton version)
-PACKAGE_NAME:=$(ARCHIVE_NAME)-$(VERSION)
+PACKAGE_NAME=$(ARCHIVE_NAME)-$(VERSION)
+LANGUAGE=en
 
 all: $(PACKAGE_NAME).tar
 
-dict/drupal.aspell: dict/drupal.txt
-	@aspell --lang en create master ./$@ < $^
+dict/drupal.$(LANGUAGE).aspell: dict/drupal.txt
+	@aspell --lang $(LANGUAGE) create master ./$@ < $^
 
 $(ARCHIVE_NAME)-pkg.el: $(ARCHIVE_NAME).el
 	@carton package
 
 # create a tar ball in package.el format for uploading to http://marmalade-repo.org
-$(PACKAGE_NAME).tar: README $(ARCHIVE_NAME).el $(ARCHIVE_NAME)-pkg.el dict/drupal.aspell dict/drupal.txt
-	@tar -c -s "@^@$(PACKAGE_NAME)/@" -f $(PACKAGE_NAME).tar $^
+$(PACKAGE_NAME).tar: README $(ARCHIVE_NAME).el $(ARCHIVE_NAME)-pkg.el dict/drupal.$(LANGUAGE).aspell dict/drupal.txt
+	@bsdtar -c -s "@^@$(PACKAGE_NAME)/@" -f $(PACKAGE_NAME).tar $^
 
 README: README.md
 	pandoc --atx-headers -t plain -o $@ $^
@@ -45,4 +46,4 @@ install: $(PACKAGE_NAME).tar
 		(package-install-file \"`pwd`/$(PACKAGE_NAME).tar\"))"
 
 clean:
-	$(RM) $(ARCHIVE_NAME)-*.tar $(ARCHIVE_NAME)-pkg.el dict/drupal.aspell *~ README
+	$(RM) $(ARCHIVE_NAME)-*.tar $(ARCHIVE_NAME)-pkg.el dict/drupal.*.aspell *~ README
