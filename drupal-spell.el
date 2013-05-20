@@ -5,7 +5,7 @@
 ;; Author: Arne Jørgensen <arne@arnested.dk>
 ;; URL: https://github.com/arnested/drupal-spell
 ;; Created: March 22, 2013
-;; Version: 0.2.1
+;; Version: 0.2.2
 ;; Keywords: wp
 
 ;; This program is free software; you can redistribute it and/or modify
