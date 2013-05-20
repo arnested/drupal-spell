@@ -18,32 +18,39 @@
 # along with Drupal spell.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-.PHONY: all test clean install
+.PHONY: all test clean install dictionary
 
-ARCHIVE_NAME:=drupal-spell
-VERSION:=$(shell carton version)
+CARTON?=carton
+EMACS?=emacs
+TAR?=bsdtar
+PANDOC?=pandoc --atx-headers
+
+VERSION?=$(shell $(CARTON) version)
+LANGUAGE?=en
+
+ARCHIVE_NAME=drupal-spell
 PACKAGE_NAME=$(ARCHIVE_NAME)-$(VERSION)
-LANGUAGE=en
 
 all: $(PACKAGE_NAME).tar
 
 dict/drupal.$(LANGUAGE).aspell: dict/drupal.txt
-	@aspell --lang $(LANGUAGE) create master ./$@ < $^
+	$(EMACS) --batch -l $(PWD)/$(ARCHIVE_NAME).el --eval "(drupal-spell-find-dictionary \"$(LANGUAGE)\")"
+
+dictionary: dict/drupal.$(LANGUAGE).aspell
 
 $(ARCHIVE_NAME)-pkg.el: $(ARCHIVE_NAME).el
-	@carton package
+	$(CARTON) package
 
 # create a tar ball in package.el format for uploading to http://marmalade-repo.org
 $(PACKAGE_NAME).tar: README $(ARCHIVE_NAME).el $(ARCHIVE_NAME)-pkg.el dict/drupal.$(LANGUAGE).aspell dict/drupal.txt
-	@bsdtar -c -s "@^@$(PACKAGE_NAME)/@" -f $(PACKAGE_NAME).tar $^
+	$(TAR) -c -s "@^@$(PACKAGE_NAME)/@" -f $(PACKAGE_NAME).tar $^
 
 README: README.md
-	pandoc --atx-headers -t plain -o $@ $^
+	$(PANDOC) -t plain -o $@ $^
 
 install: $(PACKAGE_NAME).tar
-	@emacs --batch --user `whoami` -l package --eval "(progn \
-		(package-initialize)\
-		(package-install-file \"`pwd`/$(PACKAGE_NAME).tar\"))"
+	$(EMACS) --batch -l package -f package-initialize --eval "(package-install-file \"$(PWD)/$(PACKAGE_NAME).tar\")"
 
 clean:
 	$(RM) $(ARCHIVE_NAME)-*.tar $(ARCHIVE_NAME)-pkg.el dict/drupal.*.aspell *~ README
+	$(RM) -r elpa
