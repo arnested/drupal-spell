@@ -42,7 +42,7 @@ $(ARCHIVE_NAME)-pkg.el: $(ARCHIVE_NAME).el
 	$(CARTON) package
 
 # create a tar ball in package.el format for uploading to http://marmalade-repo.org
-$(PACKAGE_NAME).tar: README $(ARCHIVE_NAME).el $(ARCHIVE_NAME)-pkg.el dict/drupal.$(LANGUAGE).aspell dict/drupal.txt
+$(PACKAGE_NAME).tar: README $(ARCHIVE_NAME).el $(ARCHIVE_NAME)-pkg.el dict/drupal.txt
 	$(TAR) -c -s "@^@$(PACKAGE_NAME)/@" -f $(PACKAGE_NAME).tar $^
 
 README: README.md
