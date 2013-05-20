@@ -80,6 +80,8 @@ node
 nodequeue
 nodequeues
 page
+panels
+panelizer
 parent
 patch
 path
