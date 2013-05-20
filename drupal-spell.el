@@ -34,14 +34,14 @@
   (when (null language)
     (setq language "en"))
   ;; Let's set up some temporary variables.
-  (let ((dict (concat (file-name-directory
-                       (or load-file-name buffer-file-name))
-                      "dict/drupal."
-                      language
-                      ".aspell"))
-        (wordlist (concat (file-name-directory
-                           (or load-file-name buffer-file-name))
-                          "dict/drupal.txt")))
+  (let ((dict (expand-file-name (concat (file-name-directory
+                                         (or load-file-name buffer-file-name default-directory))
+                                        "dict/drupal."
+                                        language
+                                        ".aspell")))
+        (wordlist (expand-file-name (concat (file-name-directory
+                                             (or load-file-name buffer-file-name default-directory))
+                                            "dict/drupal.txt"))))
     ;; If dictionary exists and is readable return it otherwise return the empty string.
     (if (file-readable-p dict)
         dict
