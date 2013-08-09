@@ -20,12 +20,12 @@
 
 .PHONY: all test clean install dictionary
 
-CARTON?=carton
+CASK?=cask
 EMACS?=emacs
 TAR?=bsdtar
 PANDOC?=pandoc --atx-headers
 
-VERSION?=$(shell $(CARTON) version)
+VERSION?=$(shell $(CASK) version)
 LANGUAGE?=en
 
 ARCHIVE_NAME=drupal-spell
@@ -39,7 +39,7 @@ dict/drupal.$(LANGUAGE).aspell: dict/drupal.txt
 dictionary: dict/drupal.$(LANGUAGE).aspell
 
 $(ARCHIVE_NAME)-pkg.el: $(ARCHIVE_NAME).el
-	$(CARTON) package
+	$(CASK) package
 
 # create a tar ball in package.el format for uploading to http://marmalade-repo.org
 $(PACKAGE_NAME).tar: README $(ARCHIVE_NAME).el $(ARCHIVE_NAME)-pkg.el dict/drupal.txt
@@ -53,4 +53,4 @@ install: $(PACKAGE_NAME).tar
 
 clean:
 	$(RM) $(ARCHIVE_NAME)-*.tar $(ARCHIVE_NAME)-pkg.el dict/drupal.*.aspell *~ README
-	$(RM) -r elpa
+	$(RM) -r .cask
