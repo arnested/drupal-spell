@@ -22,7 +22,7 @@
 
 CASK?=cask
 EMACS?=emacs
-TAR?=bsdtar
+TAR?=COPYFILE_DISABLE=1 bsdtar
 PANDOC?=pandoc --atx-headers
 
 VERSION?=$(shell $(CASK) version)
